@@ -39,3 +39,4 @@ BST<std::string> makeTree(char* filename)
 
 	return *tree;
 }
+ 
