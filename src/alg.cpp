@@ -6,37 +6,39 @@
 
 BST<std::string> makeTree(char* filename)
 {
-  std::string word;
-	std::ifstream file(filename);
-	BST<std::string>* tree = new BST<std::string>;
-	char tempStr = ' ';
-	while (!file.eof()) {
+std::string word;
+	std::ifstream F(filename);
+	BST<std::string> *tree = new BST<std::string>;
+	char str = ' ';
+	while (!F.eof()) {
 
 } 
-		while (tempStr < 65 && (!file.eof())) {
-			file.get(tempStr);
+		while ( str < 65 && (!F.eof()) ) 
+		{
+			F.get(str);
 		}
+while (  str >= 65  && (!F.eof()))
+{
+	if (str >= 65 && str <= 90)
+	{
 
-		while (tempStr >= 65 && (!file.eof())) {
-			if (tempStr >= 65 && tempStr <= 90) {
-				word += tempStr;
-			}
-			if (tempStr >= 97 && tempStr <= 122) {
-				word += tempStr;
-			}
-
-			file.get(tempStr);
-		}
-
-		for (int i = 0; i < word.length(); i++) {
-			if (word[i] >= 65 && word[i] <= 90)
-				word[i] += 32;
-		}
-
-		(*tree).Add(word);
-		word = "";
+		word += str;	
+	}
+	if (str >= 97 && str <= 122)
+	{
+		word += str;
 	}
 
-	return *tree;
+	F.get(str);	
 }
- 
+for (int i = 0; i < word.length(); i++)
+{
+	if (word[i] >= 65 && word[i] <= 90)
+		word[i] += 32;
+}
+
+(*tree).add(word);
+word = "";
+	}
+	return *tree;    
+}
