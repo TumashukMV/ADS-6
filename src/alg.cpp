@@ -3,39 +3,37 @@
 #include  <fstream>
 #include  <locale>
 #include  <cstdlib>
-
-BST<std::string> makeTree(char* filename)
+#include<string.h>
+#include<ctype.h>
+using namespace std;
+BST<string> makeTree(char* filename)
 {
-
-} 
-std::string word;
-	std::ifstream F(filename);
-	BST<std::string> *tree = new BST<std::string>;
-	char str = ' ';
-	while (!F.eof()) {
-		while ( str < 65 && (!F.eof())) 
-		{
-			F.get(str);
-		}
-        while (str >= 65 && (!F.eof()))
-        {
-	if (str >= 65 && str <= 90)
-	{
-		word += str;	
-	}
-	if (str >= 97 && str <= 122)
-	{
-		word += str;
-	}
-	F.get(str);	
-        }
-               for (int i = 0; i < word.length(); i++)
-        {
-	if (word[i] >= 65 && word[i] <= 90)
-		word[i] += 32;
+    BST<string> tree1;
+    ifstream file(filename);
+    string str="", tmp="";
+    while (file >> str)
+{
+    int flag = 0;
+    for (int j = 0; j < str.size(); j++)
+    {
+        flag = 0;
+        if ((str[j] >= 'a' && str[j] <= 'z') || (str[j] >= 'A' && str[j] <= 'Z'))
+            tmp += (char)tolower(s[j]);
+            tmp += (char)tolower(str[j]);
+        else
+            if (tmp != "")
+            {
+                tree1.add(tmp);
+                tmp = "";
+                flag = 1;
+                continue;
+            }
+    }
+    if (flag == 0 && tmp != "")
+    {
+        tree1.add(tmp);
+        tmp = "";
+    }
 }
-(*tree).add(word);
-word = "";
-}
-return *tree;
+    return tree1;
 }
