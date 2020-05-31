@@ -2,7 +2,8 @@
 using namespace std;
 
 template<typename T>
-class BST {
+class BST
+{
 public:
 	struct Node
 	{
@@ -11,117 +12,114 @@ public:
 		Node* left;
 		Node* right;
 	};
+private:
+	Node* root;
+	Node* addNode(Node*, T);
+	void  printTree(Node*)const;
+	int   depthTree(Node*);
+	int   searchNode(Node*, T);
+	void  delTree(Node*);
+	Node* delNode(Node*, int);
+	Node* copyNode(Node*,Node*);
+public:
 	BST();
 	~BST();
-	BST(const BST<T>& temp);
-	void Add(T);
-	void Print();
-
+	void add(T);
+	void print();
 	int  depth();
 	int  search(T);
-
-	void Clear();
-	void Remove(int);
-private:
-	Node* base;
-	Node* AddNode(Node*, T);
-
-	void  PrintTree(Node*)const;
-
-	int   DepthTree(Node*);
-	int   SearchNode(Node*, T);
-
-	void  DeleteTree(Node*);
-	Node* DeleteNode(Node*, int);
-
-	Node* CopyNode(Node*, Node*);
+	void clear();
+	void remove(int);
+	BST(const BST<T>& temp);
 };
 
 
 template <typename T>
-BST<T>::BST(const BST<T>& temp) {
-	base = new Node;
-	base->value = temp.base->value;
-	base->count = temp.base->count;
-	base->left = base->right = nullptr;
-	base->left = CopyNode(base->left, temp.base->left);
-	base->right = CopyNode(base->right, temp.base->right);
+BST<T>::BST(const BST<T>&  temp) {
+	root = new Node;
+	root->value = temp.root->value;
+	root->count = temp.root->count;
+	root->left = root->right = nullptr;
+	root->left = copyNode(root->left, temp.root->left);
+	root->right = copyNode(root->right, temp.root->right);
 }
 
 
 template<typename T>
-typename BST<T>::Node* BST<T>::CopyNode(Node* base, Node* temp) {
-	if (!(temp == nullptr)) {
-		base = new Node;
-		base->value = temp->value;
-		base->count = temp->count;
-		base->left = base->right = nullptr;
-		base->left = CopyNode(base->left, temp->left);
-		base->right = CopyNode(base->right, temp->right);
+typename BST<T>::Node* BST<T>::copyNode(Node* root,Node* temp) {
+	if(!(temp==nullptr))
+	{
+	root = new Node;
+	root->value = temp->value;
+	root->count = temp->count;
+	root->left = root->right = nullptr;
+	root->left = copyNode(root->left, temp->left);
+	root->right = copyNode(root->right, temp->right);
 	}
-	return base;
+	return root;
 }
 
 
 template<typename T>
-BST<T>::BST() :base(nullptr) {}
+BST<T>::BST() :root(nullptr) {}
 
 template<typename T>
 BST<T>::~BST()
 {
-	if (base)
-		DeleteTree(base);
-	base = nullptr;
+	if (root)
+		delTree(root);
+	root = nullptr;
 }
 
 template<typename T>
-typename BST<T>::Node* BST<T>::AddNode(Node* base, T value) {
-	if (base == nullptr) {
-		base = new Node;
-		base->value = value;
-		base->count = 1;
-		base->left = base->right = nullptr;
+typename BST<T>::Node* BST<T>::addNode(Node* root, T value) {
+	if (root == nullptr) {
+		root = new Node;
+		root->value = value;
+		root->count = 1;
+		root->left = root->right = nullptr;
 	}
-	else if (base->value > value) {
-		base->left = AddNode(base->left, value);
+	else if (root->value > value) {
+		root->left = addNode(root->left, value);
 	}
-	else if (base->value < value) {
-		base->right = AddNode(base->right, value);
+	else if (root->value < value) {
+		root->right = addNode(root->right, value);
 	}
 	else
-		base->count++;
-	return base;
+		root->count++;
+	return root;
 }
 
 template<typename T>
-void BST<T>::Add(T value) {
-	base = AddNode(base, value);
+void BST<T>::add(T value) {
+	root = addNode(root, value);
 }
 
 template<typename T>
-void BST<T>::PrintTree(Node* base)const {
-	if (base == nullptr) {
+void BST<T>::printTree(Node* root)const {
+	if (root == nullptr)
+	{
 		return;
 	}
-	PrintTree(base->left);
-	for (int i = 0; i < base->count; i++)
-		std::cout << base->value << " ";
-	PrintTree(base->right);
+	printTree(root->left);
+	for (int i = 0; i < root->count; i++)
+		std::cout << root->value << " ";
+	printTree(root->right);
 }
 
 template<typename T>
-void BST<T>::Print() {
-	PrintTree(base);
+void BST<T>::print() {
+	printTree(root);
 }
 
 template<typename T>
-int BST<T>::DepthTree(Node* base) {
-	if (base == nullptr)
+int BST<T>::depthTree(Node* root) {
+	if (root == nullptr)
 		return 0;
-	if (base->left == nullptr && base->right == nullptr)
+	if (root->left == nullptr && root->right == nullptr)
 		return 0;
-	int left = DepthTree(base->left);
-	int right = DepthTree(base->right);
+	int left = depthTree(root->left);
+	int right = depthTree(root->right);
 	if (left > right)
 		return left + 1;
 	else
@@ -130,89 +128,96 @@ int BST<T>::DepthTree(Node* base) {
 
 template<typename T>
 int BST<T>::depth() {
-	return DepthTree(base);
+	return depthTree(root);
 }
 
 template<typename T>
-int BST<T>::SearchNode(Node* base, T value)
+int BST<T>::searchNode(Node* root, T value)
 {
-	if (base == nullptr)
+	if (root == nullptr)
 		return 0;
-	else if (base->value > value)
-		return SearchNode(base->left, value);
-	else if (base->value < value)
-		return SearchNode(base->right, value);
+	else if (root->value > value)
+		return searchNode(root->left, value);
+	else if (root->value < value)
+		return searchNode(root->right, value);
 	else
-		return base->count;
+		return root->count;
 }
 
 template<typename T>
 int BST<T>::search(T value)
 {
-	return SearchNode(base, value);
+	return searchNode(root, value);
 }
 
 template<typename T>
-void  BST<T>::DeleteTree(Node* base)
+void  BST<T>::delTree(Node* root)
 {
-	if (base == nullptr)
+	if (root == nullptr)
 		return;
-	else {
-		DeleteTree(base->left);
-		DeleteTree(base->right);
-		delete base;
-		base = nullptr;
+	else
+	{
+		delTree(root->left);
+		delTree(root->right);
+		delete root;
+		root = nullptr;
 	}
 }
 
 template<typename T>
-void BST<T>::Clear()
+void BST<T>::clear()
 {
-	if (base) {
-		DeleteTree(base);
-		base = nullptr;
+	if (root)
+	{
+		delTree(root);
+		root = nullptr;
 	}
 }
 template<typename T>
-typename BST<T>::Node* BST<T>::DeleteNode(typename BST<T>::Node* base, int value)
+typename BST<T>::Node* BST<T>::delNode(typename BST<T>::Node* root, int value)
 {
-	Node* tempBase, * tempValue;
-	if (base == nullptr)
-		return base;
-	else if (value < base->value)
-		base->left = DeleteNode(base->left, value);
-	else if (value > base->value)
-		base->right = DeleteNode(base->right, value);
-	else {
-		tempBase = base;
-		if (base->right == nullptr)
-			base = base->left;
-		else if (base->left == nullptr)
-			base = base->right;
-		else {
-			tempValue = base->left;
-			if (tempValue->right) {
-				while (tempValue->right->right)
-					tempValue = tempValue->right;
-				base->value = tempValue->right->value;
-				base->count = tempValue->right->count;
-				tempBase = tempValue->right;
-				tempValue->right = tempValue->right->left;
-			} else {
-				base->value = tempValue->value;
-				base->count = tempValue->count;
-				tempBase = tempValue;
-				base->left = base->left->left;
+	Node* p, * v;
+	if (root == nullptr)
+		return root;
+	else if (value < root->value)
+		root->left = delNode(root->left, value);
+	else if (value > root->value)
+		root->right = delNode(root->right, value);
+	else
+	{
+		p = root;
+		if (root->right == nullptr)
+			root = root->left;
+		else if (root->left == nullptr)
+			root = root->right;
+		else
+		{
+			v = root->left;
+			if (v->right)
+			{
+				while (v->right->right)
+					v = v->right;
+				root->value = v->right->value;
+				root->count = v->right->count;
+				p = v->right;
+				v->right = v->right->left;
+			}
+			else
+			{
+				root->value = v->value;
+				root->count = v->count;
+				p = v;
+				root->left = root->left->left;
 			}
 		}
-		delete tempBase;
+		delete p;
 	}
-	return base;
+	return root;
 }
 
 template<typename T>
-void BST<T>::Remove(int value)
+void BST<T>::remove(int value)
 {
-	if (base)
-		base = DeleteNode(base, value);
-} 
+	if (root)
+		root = delNode(root, value);
+}
